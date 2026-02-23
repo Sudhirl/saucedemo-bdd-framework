@@ -115,7 +115,7 @@ public class DriverFactory {
         if (getDriver() != null) {
             log.info("Quitting browser...");
             getDriver().quit();
-            driver.remove(); // ⚠️ Critical — removes thread's driver to prevent memory leak
+            driver.remove(); // ⚠️ Critical — removes thread's driver to prevent memory leak (Prevents memory leaks in parallel runs)
             log.info("Browser closed and driver removed from ThreadLocal.");
         }
     }

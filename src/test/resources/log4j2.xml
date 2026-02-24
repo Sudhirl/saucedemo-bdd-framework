@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
 
+<!-- Log4j2 Configuration Summary
+══════════════════════════════════════════════════════
+What is Log4j2?
+  A logging library that replaces System.out.println()
+  with structured, leveled, and persistent logging.
+
+Appenders (Output Destinations):
+  1. ConsoleAppender → prints logs to Eclipse console (live)
+  2. FileAppender    → saves logs to /logs/automation.log (persistent)
+
+PatternLayout Format:
+  2026-02-24 10:30:45 [INFO ] com.saucedemo.pages.LoginPage - message
+
+Log Levels (low to high severity):
+  TRACE → DEBUG → INFO → WARN → ERROR
+  Current level = INFO (shows INFO, WARN, ERROR only)
+
+Rolling File:
+  Creates new log file daily → automation-2026-02-24.log
+  Prevents log file from growing infinitely
+
+Both appenders are active simultaneously —
+every log goes to console AND file at the same time.-->
+
     <Appenders>
 
         <!-- Console Output -->

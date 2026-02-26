@@ -84,6 +84,13 @@
       <artifactId>commons-lang3</artifactId>
       <version>3.14.0</version>
     </dependency>
+    
+    <dependency>
+    <groupId>org.aspectj</groupId>
+    <artifactId>aspectjweaver</artifactId>
+    <version>1.9.21</version>
+    <scope>runtime</scope>
+	</dependency>
 
   </dependencies>
   

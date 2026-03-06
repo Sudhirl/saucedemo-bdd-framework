@@ -111,7 +111,13 @@ public class ConfigReader {
 	}
 
 	public boolean isHeadless() {
-		return Boolean.parseBoolean(getProperty("headless"));
+		// Check environment variable first (set by CI)
+	    String envHeadless = System.getenv("headless");
+	    if (envHeadless != null) {
+	        return Boolean.parseBoolean(envHeadless);
+	    }
+	    // Fall back to config.properties
+	    return Boolean.parseBoolean(getProperty("headless"));
 	}
 
 	public boolean isScreenshotOnFailure() {

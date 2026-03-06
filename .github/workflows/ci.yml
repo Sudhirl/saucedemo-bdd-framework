@@ -1,0 +1,80 @@
+# ══════════════════════════════════════════════════
+# SauceDemo BDD Framework — CI Pipeline
+# Runs on every push and pull request to main branch
+# ══════════════════════════════════════════════════
+
+name: SauceDemo Test Pipeline
+
+# ── Trigger ───────────────────────────────────────
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:        # Allows manual trigger from GitHub UI
+
+# ── Jobs ──────────────────────────────────────────
+jobs:
+  test:
+    name: Run Automation Tests
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # ── Step 1: Download your code ──────────────
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # ── Step 2: Install Java 21 ──────────────────
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # ── Step 3: Cache Maven dependencies ────────
+      - name: Cache Maven Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # ── Step 4: Install Chrome Browser ──────────
+      - name: Install Google Chrome
+        run: |
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      # ── Step 5: Run Tests ────────────────────────
+      - name: Run Selenium Tests
+        run: mvn clean test
+        env:
+          headless: true
+
+      # ── Step 6: Upload Allure Results ───────────
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: target/allure-results
+
+      # ── Step 7: Upload Test Reports ─────────────
+      - name: Upload Cucumber Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cucumber-reports
+          path: target/cucumber-reports
+
+      # ── Step 8: Upload Logs ──────────────────────
+      - name: Upload Test Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs
+          path: logs/

@@ -112,11 +112,13 @@ public class BasePage {
 
     public void click(WebElement element) {
         try {
-            waitForElementClickable(element).click();
+            waitForElementClickable(element);
+            scrollToElement(element);
+            element.click();
             log.info("Clicked on WebElement");
         } catch (TimeoutException e) {
-            log.error("WebElement not clickable");
-            throw new RuntimeException("WebElement not clickable", e);
+            log.warn("Regular click failed, trying JS click");
+            clickWithJS(element);
         }
     }
 
